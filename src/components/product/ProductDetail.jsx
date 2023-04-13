@@ -8,9 +8,11 @@ import { getProductDetail } from '../../services/Products/productsServices';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 export default function ProductDetail() {
     const [showBreakPoint, setBreakPoint] = useState(true);
+    const [quantity, setQuantity] = useState("1 unit");
     const [productData, setProductData] = useState({
         id: "",
         name: "",
@@ -56,12 +58,12 @@ export default function ProductDetail() {
 
     useEffect(() => {
         function handleResize() {
-            (window.innerWidth < 768) ?
+            (window.innerWidth < 991) ?
                 setBreakPoint(false) :
                 setBreakPoint(true);
         }
         // Comprobar la resolución inicial
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 991) {
             setBreakPoint(false);
         }
 
@@ -71,53 +73,132 @@ export default function ProductDetail() {
     }, []);
 
 
+    const change = eventKey => {
+        setQuantity(eventKey);
+    };
+
+
 
 
     return (
         <>
             <Container>
-                <Row className='my-5'>
-                    <Card >
-                        <Row className='text-center'>
-                            <h1 >{productData.name}</h1>
-                        </Row>
+                <Row className='d-flex justify-content-center my-5'>
+                    <Card style={{ width: '90%' }}>
                         <Row>
-                            <Col md='4'>
-                                <Image src={'http://localhost:8080/api/products/upload/img/' + ((productData.photo) ? productData.photo : 'no-photo')} style={{ width: '100%', height: '450px', objectFit: 'contain' }} />
+                            <Col md={(showBreakPoint) ? '4' : '12'}>
+                                <Image src={'http://localhost:8080/api/products/upload/img/' + ((productData.photo) ? productData.photo : 'no-photo')} style={{ width: '100%', height: '400px', objectFit: 'contain' }} />
                             </Col>
-                            <Col md='4' >
-                                <Row className='d-flex align-items-center justify-content-center' style={{ height: '100%' }}>
-                                    <Row >
-                                        <h5>Condition: {productData.category.condition}</h5>
-                                        <h5>Color: {productData.color}</h5>
-                                        <h5>Model: {productData.manufacturer.model}</h5>
-                                        <h5>Brand: {productData.manufacturer.brand}</h5>
-                                        <h5>Manufacturer: {productData.manufacturer.manufacturer}</h5>
-                                        <h5>Distributor: {productData.manufacturer.distributor}</h5>
+                            <Col md={(showBreakPoint) ? '4' : '12'} >
+                                <Row>
+                                    <Row className='pb-3'>
+                                        <p className='pt-4' style={{ fontSize: '.8em', color: '#00008C' }}>{productData.category.condition}</p>
+                                        <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{productData.name}</p>
+                                    </Row>
+                                    <Row>
+                                        <p style={{ fontSize: '2rem' }} className='pb-3'>${productData.price.toLocaleString('en-US', { maximumFractionDigits: 0 })}.00</p>
+                                        <p style={{ fontSize: '.8em' }}>Color: {productData.color}</p>
+                                        <p style={{ fontSize: '.8em' }}>Model: {productData.manufacturer.model}</p>
+                                        <p style={{ fontSize: '.8em' }}>Brand: {productData.manufacturer.brand}</p>
+                                        <p style={{ fontSize: '.8em' }}>Manufacturer: {productData.manufacturer.manufacturer}</p>
+                                        <p style={{ fontSize: '.8em' }}>Distributor: {productData.manufacturer.distributor}</p>
                                     </Row>
                                 </Row>
 
                             </Col>
-                            <Col md='3'>
-                                <Row className='d-flex align-items-center justify-content-center' style={{ height: '100%' }}>
+                            <Col md={(showBreakPoint) ? '4' : '12'} className='my-3'>
+                                <Card>
+                                    <Row className='my-3'>
+                                        <Col>
+                                            <Row className='d-flex justify-content-center'>
+                                                <Row>
+                                                    <p style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#00A650' }}>Free Shipping</p>
+                                                </Row>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row className='mb-3'>
+                                        <Col>
+                                            <Row className='d-flex justify-content-center'>
+                                                <Row>
+                                                    <p style={{ fontSize: '.8rem' }}>Sold by Electronics</p>
+                                                </Row>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row className='mb-3'>
+                                        <Col>
+                                            <Row className='d-flex justify-content-center'>
+                                                <Row>
+                                                    <p style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Stock available</p>
+                                                </Row>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row className='mb-3'>
+                                        <Col>
+                                            <Row className='d-flex justify-content-center'>
+                                                <Row className='d-flex'>
+                                                    <label style={{ fontSize: '1.2rem', width: '102px' }}>Quantity: </label>
+                                                    <Dropdown style={{ width: '50px', padding: '0' }} onSelect={change}>
+                                                        <Dropdown.Toggle id="dropdown-basic" style={{ background: 'white', color: 'black', border: '0', padding: '.25rem 0' }}>
+                                                            {quantity}
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu >
+                                                            <Dropdown.Item eventKey={"1 unit"}>1 unit</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={"2 units"}>2 units</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={"3 units"}>3 units</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={"4 units"}>4 units</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={"5 units"}>5 units</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </Row>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <Row className='mb-4'>
+                                        <Col md='12'>
+                                            <Row className='justify-content-center'>
+                                                <Button variant="primary" className='mb-3' style={{ maxWidth: '85%', padding: '.5rem 1.5rem' }}>Add to Cart</Button>
+                                            </Row>
+                                        </Col>
+                                        <Col md='12'>
+                                            <Row className='justify-content-center'>
+                                                <Button variant="secondary" style={{ maxWidth: '85%', padding: '.5rem 1.5rem' }}>Buy Now</Button>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                </Card>
+
+
+                            </Col>
+
+                        </Row>
+                        <Row className=" my-3">
+                            <Col md='12'>
+                                <Row className='d-flex justify-content-center'>
                                     <Row>
-                                        <h2>Features: </h2>
+                                        <p style={{ fontSize: '1.5rem' }} className='mb-2'>Description: </p>
+                                        <p style={{ textAlign: 'justify' }}>{productData.description}</p>
+                                    </Row>
+
+                                </Row>
+
+                            </Col>
+                        </Row>
+                        <Row className=" my-3">
+                            <Col md='12'>
+                                <Row className='d-flex justify-content-center'>
+                                    <Row>
+                                        <p style={{ fontSize: '1.5rem' }}>Features: </p>
                                         {productData.features.map(feature => (
                                             <p key={Math.random()}>{feature}</p>
                                         ))}
-                                        <h5>Price: ${productData.price}</h5>
-                                        <h5>Stock: {productData.stock}</h5>
                                     </Row>
+
                                 </Row>
 
                             </Col>
-
-                        </Row>
-                        <Row className="justify-content-md-center my-3">
-                            <Col md='3'>
-                                <Button variant="primary" style={{ width: '100%' }}>Comprar</Button>
-                            </Col>
-
                         </Row>
 
 
